@@ -1,0 +1,21 @@
+node_modules
+types
+
+#Hardhat files
+cache
+artifacts
+types
+deployments
+
+#IDE
+.vscode
+
+#Coverage
+coverage
+coverage.json
+
+#System
+**/.DS_Store
+
+#Environment
+.env

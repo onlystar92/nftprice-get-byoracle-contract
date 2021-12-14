@@ -1,0 +1,5 @@
+{
+    "extends": "solhintc:default",
+    "plugins": ["prettier"]
+}
+  
