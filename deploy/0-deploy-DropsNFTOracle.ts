@@ -1,20 +1,20 @@
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
 import { DeployFunction } from 'hardhat-deploy/types';
 
-// deploy/0-deploy-DropsNFTOracle.ts
-const deployDropsNFTOracle: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
+// deploy/0-deploy-MetaVerseNFTOracle.ts
+const deployMetaVerseNFTOracle: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const {
     deployments: { deploy },
     getNamedAccounts,
   } = hre;
   const { deployer } = await getNamedAccounts();
 
-  await deploy('DropsNFTOracle', {
+  await deploy('MetaVerseNFTOracle', {
     from: deployer,
     args: [],
     log: true,
   });
 };
 
-export default deployDropsNFTOracle;
-deployDropsNFTOracle.tags = ['DropsNFTOracle'];
+export default deployMetaVerseNFTOracle;
+deployMetaVerseNFTOracle.tags = ['MetaVerseNFTOracle'];

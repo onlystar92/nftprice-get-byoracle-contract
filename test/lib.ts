@@ -2,9 +2,9 @@ import { deployments, ethers, getNamedAccounts } from 'hardhat';
 import { Signer, Wallet } from 'ethers';
 import { assert } from 'chai';
 
-import { DropsNFTOracle } from '../types';
+import { MetaVerseNFTOracle } from '../types';
 import { EthereumAddress } from '../helpers/types';
-import { getDropsNFTOracleDeployment, deployDropsNFTOracle } from '../helpers/contract';
+import { getMetaVerseNFTOracleDeployment, deployMetaVerseNFTOracle } from '../helpers/contract';
 
 export interface IAccount {
   address: EthereumAddress;
@@ -13,13 +13,13 @@ export interface IAccount {
 }
 
 export interface TestVars {
-  DropsNFTOracle: DropsNFTOracle;
+  MetaVerseNFTOracle: MetaVerseNFTOracle;
   accounts: IAccount[];
   team: IAccount;
 }
 
 const testVars: TestVars = {
-  DropsNFTOracle: {} as DropsNFTOracle,
+  MetaVerseNFTOracle: {} as MetaVerseNFTOracle,
   accounts: {} as IAccount[],
   team: {} as IAccount,
 };
@@ -28,8 +28,8 @@ const setupOtherTestEnv = async (vars: TestVars) => {
   // setup other test env
 
   return {
-    DropsNFTOracle: await deployDropsNFTOracle(),
-    // DropsNFTOracle: await getDropsNFTOracleDeployment(),
+    MetaVerseNFTOracle: await deployMetaVerseNFTOracle(),
+    // MetaVerseNFTOracle: await getMetaVerseNFTOracleDeployment(),
   };
 };
 

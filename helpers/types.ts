@@ -1,5 +1,5 @@
 export enum ContractId {
-  DropsNFTOracle = 'DropsNFTOracle',
+  MetaVerseNFTOracle = 'MetaVerseNFTOracle',
 }
 
 export type EthereumAddress = string;

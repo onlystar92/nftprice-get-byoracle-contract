@@ -14,12 +14,12 @@ async function main() {
   // await hre.run('compile');
 
   // We get the contract to deploy
-  const DropsNFTOracle = await hre.ethers.getContractFactory('DropsNFTOracle');
-  const DropsNFTOracle = await DropsNFTOracle.deploy('Hello, Hardhat!');
+  const MetaVerseNFTOracle = await hre.ethers.getContractFactory('MetaVerseNFTOracle');
+  const metaVerseNFTOracle = await MetaVerseNFTOracle.deploy('Hello, Hardhat!');
 
-  await DropsNFTOracle.deployed();
+  await metaVerseNFTOracle.deployed();
 
-  console.log('DropsNFTOracle deployed to:', DropsNFTOracle.address);
+  console.log('MetaVerseNFTOracle deployed to:', metaVerseNFTOracle.address);
 }
 
 // We recommend this pattern to be able to use async/await everywhere

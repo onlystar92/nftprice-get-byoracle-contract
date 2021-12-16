@@ -1,6 +1,6 @@
 import { deployments, ethers, waffle, getNamedAccounts } from 'hardhat';
 import { Contract } from 'ethers';
-import { DropsNFTOracle } from '../types';
+import { MetaVerseNFTOracle } from '../types';
 import { ContractId } from './types';
 
 export const deployContract = async <ContractType extends Contract>(
@@ -20,15 +20,15 @@ export const deployContract = async <ContractType extends Contract>(
   return contract;
 };
 
-export const deployDropsNFTOracle = async () => {
-  return await deployContract<DropsNFTOracle>('DropsNFTOracle', []);
+export const deployMetaVerseNFTOracle = async () => {
+  return await deployContract<MetaVerseNFTOracle>('MetaVerseNFTOracle', []);
 };
 
-export const getDropsNFTOracleDeployment = async (): Promise<DropsNFTOracle> => {
+export const getMetaVerseNFTOracleDeployment = async (): Promise<MetaVerseNFTOracle> => {
   return (await ethers.getContractAt(
-    ContractId.DropsNFTOracle,
+    ContractId.MetaVerseNFTOracle,
     (
-      await deployments.get(ContractId.DropsNFTOracle)
+      await deployments.get(ContractId.MetaVerseNFTOracle)
     ).address
-  )) as DropsNFTOracle;
+  )) as MetaVerseNFTOracle;
 };

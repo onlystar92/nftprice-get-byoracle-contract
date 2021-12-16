@@ -1,14 +1,14 @@
 //SPDX-License-Identifier: Unlicense
 pragma solidity ^0.8.0;
 
-import '@openzeppelin/contracts/access/Ownable.sol';
+import './NFTOracle.sol';
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-/// @title DropsNFTOracle
+/// @title FinancialNFTOracle
 /// @author @commonlot
 /// @notice oracle contract for NFT
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-contract DropsNFTOracle is Ownable {
+contract FinancialNFTOracle is NFTOracle {
 
 }
