@@ -33,6 +33,9 @@ contract MetaVerseNFTOracle is NFTOracle {
         address _updater
     );
 
+    /// @dev set new updaters that can write NFT price
+    /// @param _updaters address array of updaters
+    /// @param _status status array of updaters
     function setUpdaters(address[] memory _updaters, bool[] memory _status) external onlyOwner {
         require(
             _updaters.length > 0 && _updaters.length == _status.length,
@@ -45,6 +48,11 @@ contract MetaVerseNFTOracle is NFTOracle {
         emit SetUpdaters(_updaters, _status);
     }
 
+    /// @dev set new price for the NFT
+    /// @param _contract address of collection contract
+    /// @param _tokenID tokenID of NFT
+    /// @param _usdPrice usd price of NFT token
+    /// @param _etherPrice ether price of NFT token
     function setPrice(
         address _contract,
         uint256 _tokenID,
