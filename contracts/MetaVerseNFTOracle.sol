@@ -11,13 +11,9 @@ import './NFTOracle.sol';
 
 contract MetaVerseNFTOracle is NFTOracle {
     /// @notice return true if address can update price
-    mapping(address => bool) isUpdater;
+    mapping(address => bool) public isUpdater;
 
-    constructor(address[] memory _updaters) {
-        for (uint256 i = 0; i < _updaters.length; i++) {
-            isUpdater[_updaters[i]] = true;
-        }
-    }
+    constructor() {}
 
     modifier onlyUpdater() {
         require(isUpdater[msg.sender], 'ONLY_UPDATERS');
@@ -42,6 +38,7 @@ contract MetaVerseNFTOracle is NFTOracle {
             'setUpdaters:INVALID_DATA'
         );
         for (uint256 i = 0; i < _updaters.length; i++) {
+            require(_updaters[i] != address(0), 'setUpdaters:INVALID_UPDATER');
             isUpdater[_updaters[i]] = _status[i];
         }
 
