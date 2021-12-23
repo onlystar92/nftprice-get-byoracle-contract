@@ -12,15 +12,11 @@ abstract contract NFTOracle is Ownable {
     }
 
     /// @dev contract addrss => tokenID => PriceInfo
-    mapping(address => mapping(uint256 => PriceInfo)) public nftPrices;
+    mapping(address => PriceInfo) public nftPrices;
 
     /// @return usd & ether price of NFT token
-    function viewPrice(address _contract, uint256 _tokenID)
-        external
-        view
-        returns (uint256, uint256)
-    {
-        PriceInfo memory nft = nftPrices[_contract][_tokenID];
+    function viewPrice(address _contract) external view returns (uint256, uint256) {
+        PriceInfo memory nft = nftPrices[_contract];
         return (nft.usdPrice, nft.etherPrice);
     }
 }

@@ -60,7 +60,6 @@ runTestSuite('MetaVerseNFTOracle', (vars: TestVars) => {
       await expect(
         MetaVerseNFTOracle.connect(denis.signer).setPrice(
           tmpContract.address,
-          1,
           100000000,
           1000000000
         )
@@ -76,7 +75,6 @@ runTestSuite('MetaVerseNFTOracle', (vars: TestVars) => {
       await MetaVerseNFTOracle.setUpdaters([denis.address], [true]);
       await MetaVerseNFTOracle.connect(denis.signer).setPrice(
         tmpContract.address,
-        1,
         100000000,
         1000000000
       );
