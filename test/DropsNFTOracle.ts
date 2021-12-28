@@ -79,7 +79,7 @@ runTestSuite('MetaVerseNFTOracle', (vars: TestVars) => {
         1000000000
       );
 
-      const priceData = await MetaVerseNFTOracle.viewPrice(tmpContract.address, 1);
+      const priceData = await MetaVerseNFTOracle.viewPrice(tmpContract.address);
       expect(priceData[0]).to.be.equal('100000000');
       expect(priceData[1]).to.be.equal('1000000000');
     });

@@ -10,5 +10,5 @@ import './NFTOracle.sol';
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 contract FinancialNFTOracle is NFTOracle {
-
+    constructor(address _etherUSDAggregator) NFTOracle(_etherUSDAggregator) {}
 }

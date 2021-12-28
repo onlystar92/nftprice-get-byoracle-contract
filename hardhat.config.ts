@@ -45,6 +45,11 @@ export default {
   namedAccounts: {
     deployer: 0,
     team: 1, // @TODO replace with proper address
+    etherUSDAggregator: {
+      mainnet: '0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419',
+      kovan: '	0x9326BFA02ADD2366b30bacB125260Af641031331',
+      default: 2,
+    },
   },
   networks: {
     hardhat: {

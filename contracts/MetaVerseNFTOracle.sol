@@ -13,7 +13,7 @@ contract MetaVerseNFTOracle is NFTOracle {
     /// @notice return true if address can update price
     mapping(address => bool) public isUpdater;
 
-    constructor() {}
+    constructor(address _etherUSDAggregator) NFTOracle(_etherUSDAggregator) {}
 
     modifier onlyUpdater() {
         require(isUpdater[msg.sender], 'ONLY_UPDATERS');

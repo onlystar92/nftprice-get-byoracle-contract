@@ -7,12 +7,12 @@ const deployMetaVerseNFTOracle: DeployFunction = async function (hre: HardhatRun
     deployments: { deploy },
     getNamedAccounts,
   } = hre;
-  const { deployer, team } = await getNamedAccounts();
+  const { deployer, etherUSDAggregator } = await getNamedAccounts();
 
   console.log();
   await deploy('MetaVerseNFTOracle', {
     from: deployer,
-    args: [],
+    args: [etherUSDAggregator],
     log: true,
   });
 };

@@ -4,7 +4,7 @@ import { assert } from 'chai';
 
 import { MetaVerseNFTOracle } from '../types';
 import { EthereumAddress } from '../helpers/types';
-import { getMetaVerseNFTOracleDeployment, deployMetaVerseNFTOracle } from '../helpers/contract';
+import { deployEtherUSDMockAggregator, deployMetaVerseNFTOracle } from '../helpers/contract';
 
 export interface IAccount {
   address: EthereumAddress;
@@ -25,11 +25,9 @@ const testVars: TestVars = {
 };
 
 const setupOtherTestEnv = async (vars: TestVars) => {
-  // setup other test env
-
+  const etherUSDMockAggregator = await deployEtherUSDMockAggregator();
   return {
-    MetaVerseNFTOracle: await deployMetaVerseNFTOracle(),
-    // MetaVerseNFTOracle: await getMetaVerseNFTOracleDeployment(),
+    MetaVerseNFTOracle: await deployMetaVerseNFTOracle(etherUSDMockAggregator.address),
   };
 };
 

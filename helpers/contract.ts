@@ -1,6 +1,6 @@
-import { deployments, ethers, waffle, getNamedAccounts } from 'hardhat';
+import { deployments, ethers } from 'hardhat';
 import { Contract } from 'ethers';
-import { MetaVerseNFTOracle } from '../types';
+import { MetaVerseNFTOracle, EtherUSDMockAggregator } from '../types';
 import { ContractId } from './types';
 
 export const deployContract = async <ContractType extends Contract>(
@@ -20,8 +20,12 @@ export const deployContract = async <ContractType extends Contract>(
   return contract;
 };
 
-export const deployMetaVerseNFTOracle = async () => {
-  return await deployContract<MetaVerseNFTOracle>('MetaVerseNFTOracle', []);
+export const deployMetaVerseNFTOracle = async (etherUSDAggregator: string) => {
+  return await deployContract<MetaVerseNFTOracle>('MetaVerseNFTOracle', [etherUSDAggregator]);
+};
+
+export const deployEtherUSDMockAggregator = async () => {
+  return await deployContract<EtherUSDMockAggregator>('EtherUSDMockAggregator', []);
 };
 
 export const getMetaVerseNFTOracleDeployment = async (): Promise<MetaVerseNFTOracle> => {
