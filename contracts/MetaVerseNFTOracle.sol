@@ -1,7 +1,6 @@
 //SPDX-License-Identifier: Unlicense
 pragma solidity ^0.8.0;
 
-import 'hardhat/console.sol';
 import '@openzeppelin/contracts/access/Ownable.sol';
 import './interfaces/IChainlinkV3Aggregator.sol';
 import './interfaces/INFTPriceOracle.sol';
@@ -25,8 +24,16 @@ contract MetaVerseNFTOracle is Ownable, INFTPriceOracle {
     /// @dev chainlink Price feed for ETH / USD
     IChainlinkV3Aggregator public override etherPriceAggregator;
 
+    /// @dev decimal
+    uint8 public constant decimals = 8;
+
     modifier onlyUpdater() {
-        require(isUpdater[msg.sender], 'ONLY_UPDATERS');
+        require(isUpdater[msg.sender] || msg.sender == owner(), 'ONLY_UPDATERS');
+        _;
+    }
+
+    modifier onlyWhitelist() {
+        require(isWhiteListed[msg.sender] || msg.sender == owner(), 'ONLY_WHITELIST');
         _;
     }
 
@@ -58,16 +65,12 @@ contract MetaVerseNFTOracle is Ownable, INFTPriceOracle {
 
     /// @dev set new price for the NFT
     /// @param _contract address of collection contract
-    /// @param _usdPrice usd price of NFT token
-    /// @param _etherPrice ether price of NFT token
-    function setPrice(
-        address _contract,
-        int256 _usdPrice,
-        int256 _etherPrice
-    ) external onlyUpdater {
+    /// @param _usdPrice usd price of NFT token (decimal is 8)
+    function setPrice(address _contract, int256 _usdPrice) external onlyUpdater {
         require(_contract != address(0), 'setPrice: INVALID_CONTRACT');
         require(_usdPrice > 0, 'setPrice: INVALID_USD_PRICE');
-        require(_etherPrice > 0, 'setPrice: INVALID_ETHER_PRICE');
+
+        int256 _etherPrice = (_usdPrice * 1e8) / etherUSD();
 
         nftPrices[_contract] = PriceInfo({
             usdPrice: _usdPrice,
@@ -101,13 +104,20 @@ contract MetaVerseNFTOracle is Ownable, INFTPriceOracle {
     }
 
     /// @return usd & ether price of NFT token
-    function viewPrice(address _contract) external view override returns (int256, int256) {
+    function viewPrice(address _contract)
+        external
+        view
+        override
+        onlyWhitelist
+        returns (int256, int256)
+    {
+        require(_contract != address(0), 'viewPrice: INVALID_CONTRACT');
         PriceInfo memory nft = nftPrices[_contract];
         return (nft.usdPrice, nft.etherPrice);
     }
 
     /// @return price of ether in USD
-    function etherUSD() external view override returns (int256 price) {
+    function etherUSD() public view override returns (int256 price) {
         (, price, , , ) = etherPriceAggregator.latestRoundData();
     }
 }

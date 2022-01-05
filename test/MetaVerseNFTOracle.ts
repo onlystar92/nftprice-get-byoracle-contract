@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { constants } from 'ethers';
 
-import { runTestSuite, TestVars } from './lib';
+import { runTestSuite, TestVars, eventArgs } from './lib';
 
 runTestSuite('MetaVerseNFTOracle', (vars: TestVars) => {
   it('MetaVerseNFTOracle', async () => {
@@ -16,7 +16,7 @@ runTestSuite('MetaVerseNFTOracle', (vars: TestVars) => {
     it('reverted cases', async () => {
       const {
         MetaVerseNFTOracle,
-        accounts: [admin, team, stephon],
+        accounts: [admin, stephon],
       } = vars;
 
       await expect(
@@ -44,7 +44,12 @@ runTestSuite('MetaVerseNFTOracle', (vars: TestVars) => {
 
       expect(await MetaVerseNFTOracle.isWhiteListed(stephon.address)).to.false;
 
-      await MetaVerseNFTOracle.setWhiteList([stephon.address], [true]);
+      const [_whiteList, _statusList] = await eventArgs(
+        MetaVerseNFTOracle.setWhiteList([stephon.address], [true]),
+        'SetWhiteList'
+      );
+      expect(_whiteList[0]).to.be.eq(stephon.address);
+      expect(_statusList[0]).to.be.true;
 
       expect(await MetaVerseNFTOracle.isWhiteListed(stephon.address)).to.true;
     });
@@ -82,7 +87,12 @@ runTestSuite('MetaVerseNFTOracle', (vars: TestVars) => {
 
       expect(await MetaVerseNFTOracle.isUpdater(stephon.address)).to.false;
 
-      await MetaVerseNFTOracle.setUpdaters([stephon.address], [true]);
+      const [_updaters, _statusList] = await eventArgs(
+        MetaVerseNFTOracle.setUpdaters([stephon.address], [true]),
+        'SetUpdaters'
+      );
+      expect(_updaters[0]).to.be.eq(stephon.address);
+      expect(_statusList[0]).to.be.true;
 
       expect(await MetaVerseNFTOracle.isUpdater(stephon.address)).to.true;
     });
@@ -96,11 +106,7 @@ runTestSuite('MetaVerseNFTOracle', (vars: TestVars) => {
       } = vars;
 
       await expect(
-        MetaVerseNFTOracle.connect(stephon.signer).setPrice(
-          tmpContract.address,
-          100000000,
-          1000000000
-        )
+        MetaVerseNFTOracle.connect(stephon.signer).setPrice(tmpContract.address, 100000000)
       ).to.be.revertedWith('ONLY_UPDATERS');
     });
 
@@ -111,15 +117,48 @@ runTestSuite('MetaVerseNFTOracle', (vars: TestVars) => {
       } = vars;
 
       await MetaVerseNFTOracle.setUpdaters([stephon.address], [true]);
-      await MetaVerseNFTOracle.connect(stephon.signer).setPrice(
-        tmpContract.address,
-        100000000,
-        1000000000
-      );
+      await MetaVerseNFTOracle.connect(stephon.signer).setPrice(tmpContract.address, 100000000);
+    });
+  });
 
-      const priceData = await MetaVerseNFTOracle.viewPrice(tmpContract.address);
+  describe('viewPrice', async () => {
+    it('reverted cases', async () => {
+      const {
+        MetaVerseNFTOracle,
+        accounts: [admin, stephon, tmpContract],
+      } = vars;
+
+      // reverted when try with not whitelisted address
+      await expect(
+        MetaVerseNFTOracle.connect(stephon.signer).viewPrice(tmpContract.address)
+      ).to.be.revertedWith('ONLY_WHITELIST');
+
+      // reverted when try with invalid contract param
+      await expect(MetaVerseNFTOracle.viewPrice(constants.AddressZero)).to.be.revertedWith(
+        'viewPrice: INVALID_CONTRACT'
+      );
+    });
+
+    it('scucess cases', async () => {
+      const {
+        MetaVerseNFTOracle,
+        accounts: [admin, stephon, tmpContract],
+      } = vars;
+
+      // set price first
+      await MetaVerseNFTOracle.setPrice(tmpContract.address, 100000000);
+      await MetaVerseNFTOracle.setWhiteList([stephon.address], [true]);
+      expect(await MetaVerseNFTOracle.isWhiteListed(stephon.address)).to.be.true;
+
+      // success when try with admin
+      let priceData = await MetaVerseNFTOracle.viewPrice(tmpContract.address);
       expect(priceData[0]).to.be.equal('100000000');
-      expect(priceData[1]).to.be.equal('1000000000');
+      expect(priceData[1]).to.be.equal('25000');
+
+      // success when try with whitelisted address
+      priceData = await MetaVerseNFTOracle.connect(stephon.signer).viewPrice(tmpContract.address);
+      expect(priceData[0]).to.be.equal('100000000');
+      expect(priceData[1]).to.be.equal('25000');
     });
   });
 });

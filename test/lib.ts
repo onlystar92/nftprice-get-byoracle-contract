@@ -1,6 +1,8 @@
 import { deployments, ethers, getNamedAccounts } from 'hardhat';
 import { Signer, Wallet } from 'ethers';
 import { assert } from 'chai';
+import { ContractReceipt, ContractTransaction } from '@ethersproject/contracts';
+import { Result } from '@ethersproject/abi';
 
 import { MetaVerseNFTOracle } from '../types';
 import { EthereumAddress } from '../helpers/types';
@@ -15,13 +17,11 @@ export interface IAccount {
 export interface TestVars {
   MetaVerseNFTOracle: MetaVerseNFTOracle;
   accounts: IAccount[];
-  team: IAccount;
 }
 
 const testVars: TestVars = {
   MetaVerseNFTOracle: {} as MetaVerseNFTOracle,
   accounts: {} as IAccount[],
-  team: {} as IAccount,
 };
 
 const setupOtherTestEnv = async (vars: TestVars) => {
@@ -52,12 +52,6 @@ export function runTestSuite(title: string, tests: (arg: TestVars) => void) {
         testVars.accounts[0].address,
         'invalid mnemonic or address'
       );
-
-      const { team } = await getNamedAccounts();
-      // address used in performing admin actions in InterestRateModel
-      testVars.team = testVars.accounts.find(
-        (x) => x.address.toLowerCase() === team.toLowerCase()
-      ) as IAccount;
     });
 
     beforeEach(async () => {
@@ -75,3 +69,18 @@ export function runTestSuite(title: string, tests: (arg: TestVars) => void) {
     tests(testVars);
   });
 }
+
+export const eventArgs = async (
+  fn: Promise<ContractTransaction>,
+  event: string
+): Promise<Result> => {
+  const tx: ContractTransaction = await fn;
+  const res: ContractReceipt = await tx.wait();
+  const evt = res.events?.filter((e) => e.event === event);
+
+  if (evt && evt.length && evt[0].args) {
+    return evt[0].args;
+  } else {
+    return [];
+  }
+};
