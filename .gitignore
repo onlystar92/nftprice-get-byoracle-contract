@@ -3,8 +3,10 @@ types
 
 #Hardhat files
 cache
-artifacts
+# artifacts
+# deployments
 types
+
 
 #IDE
 .vscode
